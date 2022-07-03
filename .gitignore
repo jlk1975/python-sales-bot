@@ -1,0 +1,8 @@
+# Environments
+.env
+.env_test
+.env_prod
+.venv
+env/
+venv/
+ENV/
