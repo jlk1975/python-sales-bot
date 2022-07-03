@@ -1,6 +1,7 @@
 # pip installed these so far..
 requests
 jsonschema
+pymongo
 
 # imported these in python file
 json
