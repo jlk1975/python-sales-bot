@@ -14,4 +14,5 @@ response = requests.get(
 # json_response = response.json() # Deserialize, <class 'dict'>
     
 # Do not remove next line, useful for troubleshooting...
+# testing
 print(json.dumps(json.loads(response.text), indent =2))
