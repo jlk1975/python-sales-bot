@@ -83,22 +83,63 @@ def sendTweets(events_list, collection, dbfile, dry_run, sleep_time):
     #Sort Events List
     events_list.sort(key=lambda x: datetime.strptime(x['created_date'], '%Y-%m-%dT%H:%M:%S.%f'))
     
-    for event in events_list: # event is just a 'dict' !
-        # Set Tweet Variables
+    # New for loop with bundles supported
+    for event in events_list:
         created_date = event['created_date']
-        asset_name = event['asset']['name']
         total_price = event['total_price']
-        token_decimals = event['payment_token']['decimals']
-        token_eth_price = event['payment_token']['eth_price']
-        token_usd_price = Decimal(event['payment_token']['usd_price'])
         formatted_units = Web3.fromWei(int(total_price), 'ether')
-        formatted_usd_price = formatted_units * token_usd_price
-        s = sh.Shortener()
-        opensea_link = s.tinyurl.short(event['asset']['permalink'])
+        token_eth_price = event['payment_token']['eth_price']
         formatted_eth_price = formatted_units * int(float(token_eth_price))
+        token_usd_price = Decimal(event['payment_token']['usd_price'])
+        formatted_usd_price = formatted_units * token_usd_price
+        ethSymbol = CurrencySymbols.get_symbol('ETH')
 
-        #Format the Tweet
-        tweetText = asset_name + " bought for " + str(formatted_eth_price) + ethSymbol + "($" + str(round(formatted_usd_price, 2)) + ")" + " #NFT " + opensea_link
+        if type(event['asset']) is dict:
+            asset_name = event['asset']['name']
+            opensea_link = event['asset']['permalink']
+
+            tweetText = asset_name + " bought for " \
+            + str(formatted_eth_price) \
+            + ethSymbol \
+            + "($" + str(round(formatted_usd_price, 2)) + ")" \
+            + " #NFT " + opensea_link
+
+        if type(event['asset_bundle']) is dict:
+            bundle_slug = event['asset_bundle']['slug']
+            opensea_link = "https://opensea.io/bundles/ethereum/" + bundle_slug
+
+            sold_bundle_items = ""
+            for i, item in enumerate(event['asset_bundle']['assets']):
+                if len(sold_bundle_items) == 0:
+                    sold_bundle_items = sold_bundle_items + item['name']
+                elif i == len(event['asset_bundle']['assets']) - 1:
+                    sold_bundle_items = sold_bundle_items + ", and " + item['name']
+                else:
+                    sold_bundle_items = sold_bundle_items + ", " + item['name']
+
+            tweetText = sold_bundle_items + " were bought for " \
+            + str(formatted_eth_price) \
+            + ethSymbol \
+            + "($" + str(round(formatted_usd_price, 2)) + ")" \
+            + " #NFT " + opensea_link
+
+    # Old code, bundles not supported.
+    # for event in events_list: # event is just a 'dict' !
+    #     # Set Tweet Variables
+    #     created_date = event['created_date']
+    #     asset_name = event['asset']['name']
+    #     total_price = event['total_price']
+    #     token_decimals = event['payment_token']['decimals']
+    #     token_eth_price = event['payment_token']['eth_price']
+    #     token_usd_price = Decimal(event['payment_token']['usd_price'])
+    #     formatted_units = Web3.fromWei(int(total_price), 'ether')
+    #     formatted_usd_price = formatted_units * token_usd_price
+    #     s = sh.Shortener()
+    #     opensea_link = s.tinyurl.short(event['asset']['permalink'])
+    #     formatted_eth_price = formatted_units * int(float(token_eth_price))
+
+    #     #Format the Tweet
+    #     tweetText = asset_name + " bought for " + str(formatted_eth_price) + ethSymbol + "($" + str(round(formatted_usd_price, 2)) + ")" + " #NFT " + opensea_link
         
         #Send the Tweet
         print(get_log_prefix(collection) + "[Sale - " + created_date + "] Tweet: " + tweetText)
