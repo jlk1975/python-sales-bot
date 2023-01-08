@@ -14,9 +14,6 @@ from dateutil import tz
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-# test docker
-# print("im a sales bot!")
-# exit(0)
 
 ##################################### Functions ################################################
 def getLastChecked(dbfile, collection):
@@ -28,8 +25,6 @@ def getLastChecked(dbfile, collection):
         return(last_checked)
        
 def saveLastChecked(dbfile, collection, last_checked):
-    if print_db_file == True:
-        printDBFile(dbfile, "Printing DB File " + dbfile + " BEFORE Update ..")
     # Read JSON File
     jsonFile = open(dbfile, "r") 
     db = json.load(jsonFile)  
@@ -40,29 +35,10 @@ def saveLastChecked(dbfile, collection, last_checked):
     jsonFile = open(dbfile, "w+")  
     jsonFile.write(json.dumps(db))
     jsonFile.close()
-
-    if print_db_file == True:
-        printDBFile(dbfile, "Printing DB File " + dbfile + " AFTER Update ..")
     
 def get_log_prefix(collection):
     log_prefix = "[" + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " : " + collection + "] ==>> "
     return log_prefix
-
-def generateLastChecked(look_back_seconds): # This works, but you don't need it yet. Assume happy path for now.
-    # print("generateLastChecked got called ..")
-    # last_checked = datetime.strptime(datetime.now(), '%Y-%m-%dT%H:%M:%S.%f')
-    now = datetime.now()
-    datetime_offset = relativedelta(seconds=-look_back_seconds)
-    last_checked = (now + datetime_offset).isoformat()
-    return(last_checked)
-
-def printDBFile(dbfile, msg):
-    print("\n" + msg + "\n")
-    jsonFile = open(dbfile, "r") # Open the JSON file for reading
-    db = json.load(jsonFile) # Read the JSON into the buffer
-    jsonFile.close() # Close the JSON file
-    print(db)
-
 
 def sendTweets(events_list, collection, dbfile, dry_run, sleep_time):
     #Setup Creds
@@ -153,11 +129,6 @@ def sendTweets(events_list, collection, dbfile, dry_run, sleep_time):
 
         # Call saveLastChecked
         saveLastChecked(dbfile, collection, created_date)
-
-def getMints(collection):
-    new_mints = "getMints got called! ==>> Just testing new mints function!"
-    return new_mints
-
 ############################### End Functions ################################################
 
 
@@ -180,22 +151,6 @@ my_parser.add_argument('-d',
                        '--dryrun',
                        action='store_true',
                        help='DRY RUN, WILL NOT SEND TWEETS')
-my_parser.add_argument('-db',
-                       '--database',
-                       action='store_true',
-                       help='PRINT DATABASE FILE (db.JSON)')
-my_parser.add_argument('-t',
-                       '--test',
-                       action='store_true',
-                       help='FOR TESTING, WILL USE .env_test for ENV variables if set.')
-my_parser.add_argument('-p',
-                       '--pause',
-                       action='store_true',
-                       help='FOR TESTING, WILL PAUSE SCRIPT FOR SLEEP TIME.')
-my_parser.add_argument('-m',
-                       '--mints',
-                       action='store_true',
-                       help='GET NEW "MINTS" (instead of Sales).')
                     
 # Execute the parse_args() method
 args = my_parser.parse_args()
@@ -204,52 +159,15 @@ args = my_parser.parse_args()
 collections = args.Collections.split()
 sleep_time = args.sleep
 dry_run = args.dryrun
-print_db_file = args.database
-testenv = args.test
-pause_run = args.pause
-get_mints = args.mints
 
-# Old, but works..
-# Load env variables from .env file
-# load_dotenv()
-
-if testenv == True:
-    dotenv_path = './.env_test'
-else:
-    dotenv_path = './.env_prod'
+dotenv_path = './.env'
 load_dotenv(dotenv_path=dotenv_path)
 
-# Print an env var here for testing...
-TEST_VAR = os.getenv('ENV_FILE_NAME')
-print("\n")
-print("Using ENV Config: " + TEST_VAR)
-print("\n")
 
 # Set DB JS0N File
 dbfile = "./data/db.json"
 # OpenSea API Key
 OPENSEA_API_KEY = os.getenv('OPENSEA_API_KEY')
-
-# Experimental, if get_mints is set, we'll just exist the script for now until the
-# looksrare api response parsing code is written and integrated into other existing functions
-# this this same script. Some refactoring will be needed for sure!
-
-if get_mints:
-    for index, collection in enumerate(collections):
-        print(get_log_prefix(collection) + "Checking for New Mints ..")
-        new_mints = getMints(collection)
-        print("\n")
-        print(new_mints)
-        print("\n")
-    print("Some code will need be refactored to make getting new mints work, so for now I'll just exit!")    
-    exit(0)
-else:
-    print("new_mints flag was false, I'll continue on with life, Nothing to see here! ... ")
-
-
-if pause_run == True:
-    print("Pausing Run for " + str(sleep_time) + " seconds for testing..")
-    time.sleep(sleep_time)
 
 for index, collection in enumerate(collections):
     print("\n")
@@ -262,33 +180,24 @@ for index, collection in enumerate(collections):
     last_checked = getLastChecked(dbfile, collection)
     # Debug: print(last_checked)
 
-    # Add a -t flag for this or something..
-    """
-    # TEST
-    response = requests.get(
-        'https://testnets-api.opensea.io/api/v1/events',
-        params={
-            'collection_slug': collection, 
-            "event_type": "successful",
-            "only_opensea": "false",
-            "occurred_after": last_checked,  
-            },
-    )
-    """
+    # USE THIS FOR PROD DATA
+    # response = requests.get(
+    #     'https://api.opensea.io/api/v1/events',
+    #     params={
+    #         'collection_slug': collection, 
+    #         "event_type": "successful",
+    #         "only_opensea": "false",
+    #         "occurred_after": last_checked,  
+    #         },
+    #     headers={'X-API-KEY': OPENSEA_API_KEY},
+    # )
+    # json_response = response.json() # Deserialize, <class 'dict'>
 
-    # PROD
-    response = requests.get(
-        'https://api.opensea.io/api/v1/events',
-        params={
-            'collection_slug': collection, 
-            "event_type": "successful",
-            "only_opensea": "false",
-            "occurred_after": last_checked,  
-            },
-        headers={'X-API-KEY': OPENSEA_API_KEY},
-    )
-    
-    json_response = response.json() # Deserialize, <class 'dict'>
+    # NEW - USE THIS FOR TESTING
+    with open('test_data.json') as f:
+        json_response = json.load(f)
+    print(type(json_response))
+    exit()
     
     # Do not remove next line, useful for troubleshooting...
     # print(json.dumps(json.loads(response.text), indent =2))
@@ -300,7 +209,7 @@ for index, collection in enumerate(collections):
     
     if number_of_sales > 0:
         print(get_log_prefix(collection) + "Prepping Tweets for " + str(number_of_sales) + " sales..")
-        events_list = json_response['asset_events'] # Remember, this is just a list!
+        events_list = json_response['asset_events']  
         sendTweets(events_list, collection, dbfile, dry_run, sleep_time)
     else:
         print(get_log_prefix(collection) + "No new sales, nothing to Tweet about.")
