@@ -5,4 +5,10 @@
 .venv
 env/
 venv/
+venv
 ENV/
+env.bak/
+venv.bak/
+*_env/
+# Test data
+test_data.json

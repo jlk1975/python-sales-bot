@@ -38,7 +38,7 @@
 - create file: .env_prod (Will have to contain Twitter and OpenSea API keys)
 - python3 -m venv venv
 - source ./venv/bin/activate
-- pip install -r ./requirements.LOCAL.txt
+- pip install -r ./requirements.txt
 - python3 ./salesbot.py "pixawitches" --mints -t
 - make code changes, run python3 ./salesbot.py "pixawitches" --mints -t again to test!
 - Once code works:
