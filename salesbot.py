@@ -99,24 +99,6 @@ def sendTweets(events_list, collection, dbfile, dry_run, sleep_time):
             + "($" + str(round(formatted_usd_price, 2)) + ")" \
             + " #NFT " + opensea_link
 
-    # Old code, bundles not supported.
-    # for event in events_list: # event is just a 'dict' !
-    #     # Set Tweet Variables
-    #     created_date = event['created_date']
-    #     asset_name = event['asset']['name']
-    #     total_price = event['total_price']
-    #     token_decimals = event['payment_token']['decimals']
-    #     token_eth_price = event['payment_token']['eth_price']
-    #     token_usd_price = Decimal(event['payment_token']['usd_price'])
-    #     formatted_units = Web3.fromWei(int(total_price), 'ether')
-    #     formatted_usd_price = formatted_units * token_usd_price
-    #     s = sh.Shortener()
-    #     opensea_link = s.tinyurl.short(event['asset']['permalink'])
-    #     formatted_eth_price = formatted_units * int(float(token_eth_price))
-
-    #     #Format the Tweet
-    #     tweetText = asset_name + " bought for " + str(formatted_eth_price) + ethSymbol + "($" + str(round(formatted_usd_price, 2)) + ")" + " #NFT " + opensea_link
-        
         #Send the Tweet
         print(get_log_prefix(collection) + "[Sale - " + created_date + "] Tweet: " + tweetText)
         
@@ -182,23 +164,23 @@ for index, collection in enumerate(collections):
     print("Last checked: " + last_checked)
 
     # USE THIS FOR PROD DATA
-    # response = requests.get(
-    #     'https://api.opensea.io/api/v1/events',
-    #     params={
-    #         'collection_slug': collection, 
-    #         "event_type": "successful",
-    #         "only_opensea": "false",
-    #         "occurred_after": last_checked,  
-    #         },
-    #     headers={'X-API-KEY': OPENSEA_API_KEY},
-    # )
-    # json_response = response.json() # Deserialize, <class 'dict'>
+    response = requests.get(
+        'https://api.opensea.io/api/v1/events',
+        params={
+            'collection_slug': collection, 
+            "event_type": "successful",
+            "only_opensea": "false",
+            "occurred_after": last_checked,  
+            },
+        headers={'X-API-KEY': OPENSEA_API_KEY},
+    )
+    json_response = response.json() # Deserialize, <class 'dict'>
 
+    # READING FROM test_data.json has a flaw, really we need 1 test json data file for EACH collection.
     # NEW - USE THIS FOR TESTING, COMMENT OUT FOR PROD
-    with open('test_data.json') as f:
-        json_response = json.load(f)
-    # # print(json_response)
-
+    # with open('test_data.json') as f:
+    #     json_response = json.load(f)
+    # # # print(json_response)
 
     # Do not remove next line, useful for troubleshooting...
     # print(json.dumps(json.loads(response.text), indent =2))
