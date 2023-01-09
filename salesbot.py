@@ -4,7 +4,6 @@ import sys
 import json
 import tweepy
 import os
-import pyshorteners as sh
 import time
 from currency_symbols import CurrencySymbols
 from dotenv import load_dotenv
@@ -13,6 +12,7 @@ from decimal import Decimal
 from dateutil import tz
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import pyshorteners as sh #try without this
 
 
 ##################################### Functions ################################################
@@ -166,6 +166,7 @@ load_dotenv(dotenv_path=dotenv_path)
 
 # Set DB JS0N File
 dbfile = "./data/db.json"
+
 # OpenSea API Key
 OPENSEA_API_KEY = os.getenv('OPENSEA_API_KEY')
 
@@ -178,7 +179,7 @@ for index, collection in enumerate(collections):
         time.sleep(sleep_time)  
    
     last_checked = getLastChecked(dbfile, collection)
-    # Debug: print(last_checked)
+    print("Last checked: " + last_checked)
 
     # USE THIS FOR PROD DATA
     # response = requests.get(
@@ -193,12 +194,12 @@ for index, collection in enumerate(collections):
     # )
     # json_response = response.json() # Deserialize, <class 'dict'>
 
-    # NEW - USE THIS FOR TESTING
+    # NEW - USE THIS FOR TESTING, COMMENT OUT FOR PROD
     with open('test_data.json') as f:
         json_response = json.load(f)
-    print(type(json_response))
-    exit()
-    
+    # # print(json_response)
+
+
     # Do not remove next line, useful for troubleshooting...
     # print(json.dumps(json.loads(response.text), indent =2))
     

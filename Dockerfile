@@ -8,10 +8,9 @@ COPY salesbot.py /salesbot/
 # has the below COPY statement for db.json, it's really only useful for testing locally
 # and running docker without a -v <hostdir>:<containerdir> flag.
 COPY ./data/db.json /salesbot/data/db.json
-COPY .env_prod /salesbot/
-COPY .env_test /salesbot/
-COPY requirements.DOCKER.txt /tmp
-RUN pip3 install -r /tmp/requirements.DOCKER.txt
+COPY .env /salesbot/
+COPY requirements.txt /tmp
+RUN pip3 install -r /tmp/requirements.txt
 RUN chmod 755 /salesbot/*.py
 
 WORKDIR /salesbot
