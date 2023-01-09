@@ -1,5 +1,20 @@
 # python-sales-bot
 
+## Last Build /Push / Run Commands (Version 1.8.2023.1)
+- LOCAL:
+
+`docker build . -t jkendall1975/python-salesbot:1.8.2023.1`
+
+`docker run --name salesbot -v ~/code/python-sales-bot/data:/salesbot/data jkendall1975/python-salesbot:1.8.2023.1 /salesbot/salesbot.py "pixawizards pixawyverns pixabrews relics-of-the-pixarealm pixawitches pixawargsofficial" --sleep 10 --dryrun`
+
+`docker login`
+
+`docker push jkendall1975/python-salesbot:1.8.2023.1`
+
+- VM: 
+`docker run --name salesbot -v ~/salesbot/data:/salesbot/data jkendall1975/python-salesbot:1.8.2023.1 /salesbot/salesbot.py "pixawizards pixawyverns pixabrews relics-of-the-pixarealm pixawitches pixawargsofficial" --sleep 30 --dryrun`
+
+
 ## Requirements
 - Docker
 - Python3 / Pip3 (if you don't have Docker or want to do local development and testing without using Docker)
