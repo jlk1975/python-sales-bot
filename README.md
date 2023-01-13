@@ -14,7 +14,7 @@
 - VM: 
 `docker run --name salesbot -v ~/salesbot/data:/salesbot/data jkendall1975/python-salesbot:1.8.2023.1 /salesbot/salesbot.py "pixawizards pixawyverns pixabrews relics-of-the-pixarealm pixawitches pixawargsofficial" --sleep 30 --dryrun`
 
-# 💰 🗡️ 🎩 📖 🏡 📛
+
 ## Requirements
 - Docker
 - Python3 / Pip3 (if you don't have Docker or want to do local development and testing without using Docker)
