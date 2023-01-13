@@ -22,32 +22,87 @@ load_dotenv(dotenv_path=dotenv_path)
 # Secret decoder ring
 # print(emoji.demojize("📊"))
 
+# emojis = {
+#   "money": ":money_bag:",
+#   "hat": ":top_hat:",
+#   "sword": ":dagger:",
+#   "book": ":open_book:",
+#   "house": ":house_with_garden:",
+#   "badge": ":name_badge:",
+#   "pixa_wizard": ":man_mage:",
+#   "pixa_witch": ":woman_mage:",
+#   "pixa_wyvren": ":dragon_face:",
+#   "pixa_warg": ":wolf:",
+#   "pixa_brew": ":beer_mug:",
+#   "pixa_tome": ":framed_picture:",
+#   "heart": ":red_heart:",
+#   "wand": ":magic_wand:",
+#   "diamond": ":large_blue_diamond:",
+#   "stats": ":bar_chart:"
+# }
+
 emojis = {
-  "money": ":money_bag:",
-  "hat": ":top_hat:",
-  "sword": ":dagger:",
-  "book": ":open_book:",
-  "house": ":house_with_garden:",
-  "badge": ":name_badge:",
-  "pixa_wizard": ":man_mage:",
-  "pixa_witch": ":woman_mage:",
-  "pixa_wyvren": ":dragon_face:",
-  "pixa_warg": ":wolf:",
-  "pixa_brew": ":beer_mug:",
-  "pixa_tome": ":framed_picture:",
-  "heart": ":red_heart:",
-  "wand": ":magic_wand:",
-  "diamond": ":large_blue_diamond:",
-  "stats": ":bar_chart:"
+  "PixaBrews": ":beer_mug:",
+  "PIXA Token": ":money_bag:",
+  "PixaLE": ":large_blue_diamond:",
+  "PixaWargs Official": ":wolf:",
+  "PixaWitches": ":woman_mage:",
+  "PixaWizards": ":man_mage:",
+  "PixaWyverns": ":dragon_face:"
 }
-# msg = "Today's @pixa_nft stats " + emoji.emojize(emojis['stats']) + " ... "
-msg = "i " + emoji.emojize(emojis['heart']) + "  @pixa_nft " + emoji.emojize(emojis['pixa_wizard']) + " " \
-+ emoji.emojize(emojis['pixa_witch']) + " " \
-+ emoji.emojize(emojis['pixa_wyvren']) + " " \
-+ emoji.emojize(emojis['pixa_warg']) + " " \
-+ emoji.emojize(emojis['pixa_brew']) + " " \
-+ emoji.emojize(emojis['pixa_tome']) + " " \
-+ emoji.emojize(emojis['wand']) + " " \
-+ emoji.emojize(emojis['diamond']) + " " \
-+ emoji.emojize(emojis['sword'])
-pymods.tweet.sendTweet(msg)
+
+files = ['pixabrews', 'pixa', 'pixale', 'pixawargsofficial', \
+'pixawitches', 'pixawizards', 'pixawyverns']
+
+for file in files:
+  fname = "pixa_stats/" + file + ".json"
+  with open(fname, 'r') as f:
+    collection_data = json.load(f)
+    emj = emoji.emojize(emojis[collection_data['name']])
+    # cname = 
+    print(emj)
+    #print("#" + collection_data['name'] + " " + emoji.emojize(emojis[collection_data['name']]))
+
+
+
+# print(pixawizards_data['name'])
+# print(pixawizards_data['floor'])
+# print(pixawizards_data['average_price'])
+
+# msg_header = "Today's @pixa_nft stats! " + emoji.emojize(emojis['stats']) + " ... \n\n"
+
+# msg = msg_header \
+# + "  " + emoji.emojize(emojis['pixa_wizard']) + " #PixaWizards " + emoji.emojize(emojis['pixa_wizard']) \
+# + "\n" \
+# + "\tfloor 0.035 \n" \
+# + "\tavg. price 0.21312964726747272 \n" \
+# + "\towners 481 \n" \
+# + "\ttotal vol. 288.57754240015805 \n" \
+# + "\ttotal sales 1354 \n" \
+# + "\ttotal supply 1000 \n"
+
+# pymods.tweet.sendTweet(msg)
+
+
+
+
+
+
+
+
+
+
+
+# msg = "i " + emoji.emojize(emojis['heart']) + "  @pixa_nft " + emoji.emojize(emojis['pixa_wizard']) + " " \
+# + emoji.emojize(emojis['pixa_witch']) + " " \
+# + emoji.emojize(emojis['pixa_wyvren']) + " " \
+# + emoji.emojize(emojis['pixa_warg']) + " " \
+# + emoji.emojize(emojis['pixa_brew']) + " " \
+# + emoji.emojize(emojis['pixa_tome']) + " " \
+# + emoji.emojize(emojis['wand']) + " " \
+# + emoji.emojize(emojis['diamond']) + " " \
+# + emoji.emojize(emojis['sword'])
+# pymods.tweet.sendTweet(msg)
+
+
+ 
