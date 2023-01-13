@@ -1,6 +1,6 @@
 import os
 import tweepy
-
+ 
 def sendTweet(msg):
     #Setup Creds
     CONSUMER_KEY = os.getenv('CONSUMER_KEY')

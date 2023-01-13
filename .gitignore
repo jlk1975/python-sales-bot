@@ -13,3 +13,4 @@ venv.bak/
 # Test data
 test_data.json
 pixa_stats
+pymods/__pycache__

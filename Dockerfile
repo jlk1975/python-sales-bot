@@ -1,18 +1,17 @@
 # FROM python:alpine3.15
 FROM python:3.9
 
-COPY salesbot.py /salesbot/
-COPY pixa_stats.py /salesbot/
-COPY pymods /salesbot/
-COPY ./data/db.json /salesbot/data/db.json
-COPY test_data.json /salesbot/
-COPY .env /salesbot/
-COPY requirements.txt /tmp
+COPY salesbot.py /bot/
+COPY stats.py /bot/
+COPY pymods /bot/pymods
+COPY ./data/db.json /bot/data/db.json
+COPY test_data.json /bot/
+COPY .env /bot/
+COPY requirements.txt /bot/
 RUn pip3 install --upgrade pip
-RUN pip3 install -r /tmp/requirements.txt
-RUN chmod 755 /salesbot/*.py
+RUN pip3 install -r /bot/requirements.txt
+RUN chmod 755 /bot/*.py
 
-WORKDIR /salesbot
-# CMD ["python3", "--version"]
+WORKDIR /bot
 ENTRYPOINT ["python"]
 CMD ["--version"]
