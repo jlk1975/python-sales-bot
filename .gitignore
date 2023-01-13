@@ -12,3 +12,4 @@ venv.bak/
 *_env/
 # Test data
 test_data.json
+pixa_stats
