@@ -18,30 +18,36 @@ from currency_symbols import CurrencySymbols
 import time
 import pymods.tweet
 
+# Create the parser
+my_parser = argparse.ArgumentParser(prog='statsbot', description='Tweet NFT Stats')
+
+# Add Positional (Required) Arguments:
+# my_parser.add_argument('Collections',
+#                        type=str,
+#                        help='the nft collection to check')
+
+# Add Optional Arguments:
+my_parser.add_argument('-s',
+                       '--sleep',
+                       type=int,
+                       help='Time to Sleep in Seconds before next Tweet')
+my_parser.add_argument('-d',
+                       '--dryrun',
+                       action='store_true',
+                       help='DRY RUN, WILL NOT SEND TWEETS')
+                    
+# Execute the parse_args() method
+args = my_parser.parse_args()
+
+# Set variables
+sleep_time = args.sleep
+dry_run = args.dryrun
+
 dotenv_path = './.env'
 load_dotenv(dotenv_path=dotenv_path)
 
 # Secret decoder ring
 # print(emoji.demojize("📊"))
-
-# emojis = {
-#   "money": ":money_bag:",
-#   "hat": ":top_hat:",
-#   "sword": ":dagger:",
-#   "book": ":open_book:",
-#   "house": ":house_with_garden:",
-#   "badge": ":name_badge:",
-#   "pixa_wizard": ":man_mage:",
-#   "pixa_witch": ":woman_mage:",
-#   "pixa_wyvren": ":dragon_face:",
-#   "pixa_warg": ":wolf:",
-#   "pixa_brew": ":beer_mug:",
-#   "pixa_tome": ":framed_picture:",
-#   "heart": ":red_heart:",
-#   "wand": ":magic_wand:",
-#   "diamond": ":large_blue_diamond:",
-#   "stats": ":bar_chart:"
-# }
 
 emojis = {
   "PixaBrews": ":beer_mug:",
@@ -75,7 +81,7 @@ for file in files:
     total_sales = collection_data['total_sales']
     total_supply = collection_data['total_supply']
     
-    msg = " #" + cname + " " + emj + " stats for @pixa_nft " + chart + " .. \n" \
+    msg = " #" + cname + " " + emj + " stats " + chart + " for @pixa_nft .. \n" \
     + "    Floor: " + str(floor) + ethSymbol +"\n" \
     + "    Average Price: " + str(avg_price) + ethSymbol +"\n" \
     + "    Owners: " + str(num_owners) +"\n" \
@@ -83,5 +89,6 @@ for file in files:
     + "    Sales: " + str(total_sales) +"\n" \
     + "    Supply " + str(total_supply) +"\n"
 
-    pymods.tweet.sendTweet(msg)
-    time.sleep(10)
+    pymods.tweet.sendTweet(msg, dry_run)
+    if sleep_time:
+      time.sleep(sleep_time)

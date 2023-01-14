@@ -1,7 +1,7 @@
 import os
 import tweepy
  
-def sendTweet(msg):
+def sendTweet(msg, dry_run):
     #Setup Creds
     CONSUMER_KEY = os.getenv('CONSUMER_KEY')
     CONSUMER_SECRET = os.getenv('CONSUMER_SECRET')
@@ -14,9 +14,13 @@ def sendTweet(msg):
         access_token=ACCESS_TOKEN,
         access_token_secret=ACCESS_TOKEN_SECRET)
     
-    print(msg)
-    # response = client.create_tweet(text=msg)
-    # print(response)
-        
+    if dry_run == False:
+        print("Stats Bot Sending Tweet..")
+        response = client.create_tweet(text=msg)
+        print(response)
+    else:
+        print("Stats Bot NOT Sending Tweet..Dry Run Only..")
+
+    print(msg)   
 
   
