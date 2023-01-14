@@ -14,6 +14,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pyshorteners as sh #try without this
 import emoji
+from currency_symbols import CurrencySymbols
 import pymods.tweet
 
 dotenv_path = './.env'
@@ -51,17 +52,31 @@ emojis = {
   "PixaWyverns": ":dragon_face:"
 }
 
-files = ['pixabrews', 'pixa', 'pixale', 'pixawargsofficial', \
+ethSymbol = CurrencySymbols.get_symbol('ETH')
+
+files = ['pixabrews', 'pixale', 'pixawargsofficial', \
 'pixawitches', 'pixawizards', 'pixawyverns']
+
+msg_header = "\nToday's @pixa_nft stats! " + emoji.emojize(':bar_chart:') + " .. \n"
+msg = ""
 
 for file in files:
   fname = "pixa_stats/" + file + ".json"
   with open(fname, 'r') as f:
     collection_data = json.load(f)
     emj = emoji.emojize(emojis[collection_data['name']])
-    # cname = 
-    print(emj)
-    #print("#" + collection_data['name'] + " " + emoji.emojize(emojis[collection_data['name']]))
+    cname = collection_data['name']
+    floor = collection_data['floor']
+    num_owners = collection_data['num_owners']
+    avg_price = round(collection_data['average_price'], 3)
+    msg = msg + emj + "#" + cname + " " + emj + "\n" \
+    + "    floor " + str(floor) + ethSymbol +"\n" \
+    + "    avg price " + str(avg_price) + ethSymbol +"\n" \
+    + "    owners " + str(num_owners) +"\n"
+
+
+msg = msg_header + msg
+print(msg) 
 
 
 
