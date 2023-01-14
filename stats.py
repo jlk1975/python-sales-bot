@@ -15,6 +15,7 @@ from dateutil.relativedelta import relativedelta
 import pyshorteners as sh #try without this
 import emoji
 from currency_symbols import CurrencySymbols
+import time
 import pymods.tweet
 
 dotenv_path = './.env'
@@ -57,9 +58,10 @@ ethSymbol = CurrencySymbols.get_symbol('ETH')
 files = ['pixabrews', 'pixale', 'pixawargsofficial', \
 'pixawitches', 'pixawizards', 'pixawyverns']
 
-msg_header = "\nToday's @pixa_nft stats! " + emoji.emojize(':bar_chart:') + " .. \n"
-msg = ""
+chart = emoji.emojize(':bar_chart:')
 
+msg = "\nToday's @pixa_nft stats! " + chart + " .. \n"
+ 
 for file in files:
   fname = "pixa_stats/" + file + ".json"
   with open(fname, 'r') as f:
@@ -69,55 +71,17 @@ for file in files:
     floor = collection_data['floor']
     num_owners = collection_data['num_owners']
     avg_price = round(collection_data['average_price'], 3)
-    msg = msg + emj + "#" + cname + " " + emj + "\n" \
-    + "    floor " + str(floor) + ethSymbol +"\n" \
-    + "    avg price " + str(avg_price) + ethSymbol +"\n" \
-    + "    owners " + str(num_owners) +"\n"
+    volume = round(collection_data['total_volume'], 3)
+    total_sales = collection_data['total_sales']
+    total_supply = collection_data['total_supply']
+    
+    msg = " #" + cname + " " + emj + " stats for @pixa_nft " + chart + " .. \n" \
+    + "    Floor: " + str(floor) + ethSymbol +"\n" \
+    + "    Average Price: " + str(avg_price) + ethSymbol +"\n" \
+    + "    Owners: " + str(num_owners) +"\n" \
+    + "    Volume: " + str(volume) + ethSymbol +"\n" \
+    + "    Sales: " + str(total_sales) +"\n" \
+    + "    Supply " + str(total_supply) +"\n"
 
-
-msg = msg_header + msg
-print(msg) 
-
-
-
-# print(pixawizards_data['name'])
-# print(pixawizards_data['floor'])
-# print(pixawizards_data['average_price'])
-
-# msg_header = "Today's @pixa_nft stats! " + emoji.emojize(emojis['stats']) + " ... \n\n"
-
-# msg = msg_header \
-# + "  " + emoji.emojize(emojis['pixa_wizard']) + " #PixaWizards " + emoji.emojize(emojis['pixa_wizard']) \
-# + "\n" \
-# + "\tfloor 0.035 \n" \
-# + "\tavg. price 0.21312964726747272 \n" \
-# + "\towners 481 \n" \
-# + "\ttotal vol. 288.57754240015805 \n" \
-# + "\ttotal sales 1354 \n" \
-# + "\ttotal supply 1000 \n"
-
-# pymods.tweet.sendTweet(msg)
-
-
-
-
-
-
-
-
-
-
-
-# msg = "i " + emoji.emojize(emojis['heart']) + "  @pixa_nft " + emoji.emojize(emojis['pixa_wizard']) + " " \
-# + emoji.emojize(emojis['pixa_witch']) + " " \
-# + emoji.emojize(emojis['pixa_wyvren']) + " " \
-# + emoji.emojize(emojis['pixa_warg']) + " " \
-# + emoji.emojize(emojis['pixa_brew']) + " " \
-# + emoji.emojize(emojis['pixa_tome']) + " " \
-# + emoji.emojize(emojis['wand']) + " " \
-# + emoji.emojize(emojis['diamond']) + " " \
-# + emoji.emojize(emojis['sword'])
-# pymods.tweet.sendTweet(msg)
-
-
- 
+    pymods.tweet.sendTweet(msg)
+    time.sleep(10)
