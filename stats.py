@@ -87,7 +87,8 @@ for file in files:
     + "    Owners: " + str(num_owners) +"\n" \
     + "    Volume: " + str(volume) + ethSymbol +"\n" \
     + "    Sales: " + str(total_sales) +"\n" \
-    + "    Supply " + str(total_supply) +"\n"
+    + "    Supply " + str(total_supply) +"\n" \
+    + "https://opensea.io/collection/" + file
 
     pymods.tweet.sendTweet(msg, dry_run)
     if sleep_time:
